@@ -1,0 +1,8 @@
+project:
+    title: "static-ish"
+    subtitle: "Project Subtitle"
+    jquery_version: "1.2.3"
+    main_nav:
+        - ["Home", "index.html"]
+        - ["Block Types", "block-types.html"]
+        - ["API", "api.html"]

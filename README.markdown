@@ -9,3 +9,10 @@ Released under the MIT License
 
 Synopsis
 --------
+
+static-ish is a plain text content library for PHP comprising a simple blog engine and support for pages composed of metadata and a list typed blocks.
+
+Documentation
+-------------
+
+[Read the static-ish documentation at onehackoranother.com](http://onehackoranother.com/projects/php/static-ish)

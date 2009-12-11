@@ -1,0 +1,118 @@
+
+<h2>API</h2>
+
+<h3>Page</h3>
+
+<dl class='docs'>
+  <dt>Page::load($path)</dt>
+  <dd>Loads a page from <code>$path</code>, returning the page object</dd>
+  
+  <dt>$page->__get($key)</dt>
+  <dd>Returns page metadata item identified by <code>$key</code></dd>
+    
+  <dt>$page->__set($key, $val)</dt>
+  <dd>Sets page metadata item identified by <code>$key</code> to <code>$value</code></dd>
+  
+  <dt>$page->block_html($options = array())</dt>
+  <dd>Returns HTML representation of page's blocks, concatenated into a single string</dd>
+  
+  <dt>foreach ($page as $block)</dt>
+  <dd>Iterates over each page block</dd>
+</dl>
+
+<h3>Blog</h3>
+
+<p>
+  static-ish's <code>Blog</code> class is a wrapper around a directory structure arranged
+  according to a simple convention, permitting content to be accessed and queried as a
+  blog.
+</p>
+
+<div class='caption'>Example static-ish blog directory structure:</div>
+<pre>BLOG_ROOT
+  |
+  |- index.page # Blog metadata contained in YAML preamble
+  |
+  |- 2008
+  |  |- 01
+  |  |  |- 12-this-is-a-post.page
+  |  |  |- another-post.page
+  |  |
+  |  |- 05
+  |  |- 10
+  |  |- 23
+  |
+  |- 2009
+     |- 05
+     |- 07
+        |- 15-last-post.page</pre>
+        
+<p><strong>Note:</strong> leading zeroes for months are required.</p>
+
+<p>At the very least, <code>index.page</code> should define <code>base_url</code>,
+  the URL prefix for all blog posts (a post's full URL can be retrieved using
+  <code>$post->url</code>). Additionally, if present, the keys
+  <code>title</code>, <code>description</code>, <code>language</code> and
+  <code>copyright</code> will be inserted into the RSS feed.
+</p>
+
+<dl class='docs'>
+  
+  <dt>new Blog($blog_root)</dt>
+  <dd>Creates a new Blog instance, with content root <code>$blog_root</code></dd>
+
+  <dt>$blog->get_info()</dt>
+  <dd>
+    Returns a <code>Page</code> containing the blog's metadata.
+  </dd>
+  
+  <dt>$blog->get_post($path)</dt>
+  <dd>
+    Returns a specified post from the blog. Format of <code>$path</code> should resemble
+    <code>2009/01/foo-bar-baz</code>, or more formally, match the regex
+    <code>|^\d{4}/\d{2}/[a-z0-9\._-]+$|i</code>. When searching for a matching file, the
+    engine will ignore any numeric prefix on the page's name. For example, post path
+    <code>2009/01/foo</code> would match both <code>2009/01/foo.page</code> and
+    <code>2009/01/20-foo.page</code>. This allows you to organise monthly folders
+    chronologically without causing the day numbers to appear in URLs.
+  </dd>
+
+  <dt>$blog->get_page($page, $rpp)</dt>
+  <dd>
+    Returns the <code>$page</code>th page of posts based on <code>$rpp</code>
+    posts per page.
+  </dd>
+  
+  <dt>$blog->get_monthly_archive_counts()</dt>
+  <dd>
+    Returns an array mapping month (expressed as Unix timestamp) => number of posts.
+  </dd>
+  
+  <dt>$blog->get_post_count()</dt>
+  <dd>
+    Returns the total number of posts in the blog.
+  </dd>
+  
+  <dt>$blog->get_page_count($rpp)</dt>
+  <dd>
+    Returns the total number of pages in the blog, based on <code>$rpp</code> posts
+    per page.
+  </dd>
+  
+  <dt>$blog->get_monthly_archive($unix_timestamp)</dt>
+  <dd>
+    Returns an array of posts for the given month, expressed as a Unix timestamp.
+  </dd>
+  
+  <dt>$blog->get_monthly_archive($year, $month)</dt>
+  <dd>
+    Returns an array of posts for the given year and month.
+  </dd>
+  
+  <dt>$blog->get_feed($count)</dt>
+  <dd>
+    Returns a <code>DOMDocument</code> representing an RSS feed of the latest
+    <code>$count</code> posts.
+  </dd>
+
+</dl>

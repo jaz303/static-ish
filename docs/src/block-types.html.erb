@@ -1,0 +1,103 @@
+
+<h3>YAML Preamble</h3>
+
+<p>Each page may begin with a <a href='http://www.yaml.org/'>YAML</a>-formatted
+  preamble block, providing metadata about the page itself.</p>
+
+<pre>title: Page title
+published_at: 2009-12-11T16:00:00
+author: Mr. Smith
+tags: ["foo", "bar", "baz"]</pre>
+
+<p>
+  All fields are optional, but <code>type</code> is special - if present,
+  <code>Page::load()</code> will use its value as the class to instantiate,
+  instead of the default <code>Page</code>.
+  If <code>published_at</code> is not present it will be set to the page's
+  modification time, as reported by <code>filemtime()</code>.
+</p>
+
+<h3>HTML Blocks</h3>
+
+<p>HTML blocks simply return their original content, unaltered.</p>
+
+<pre>--- html
+
+&lt;p&gt;This is content inside an HTML block&lt;/p&gt;</pre>
+
+<h3>Markdown Blocks</h3>
+
+<p>Block content is converted to HTML using <a href='http://daringfireball.net/projects/markdown/'>Markdown</a>.</p>
+
+<pre>--- markdown
+
+Heading
+=======
+
+Here is some content marked down, not up.</pre>
+
+<h3>Textile Blocks</h3>
+
+<p>Block content is converted to HTML using <a href='http://www.textism.com/tools/textile/'>Textile</a>.</p>
+
+<pre>--- textile
+
+h1. Heading
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit.</pre>
+
+<h3>Code Blocks</h3>
+
+<p>
+  Code blocks convert their content to syntax-highlighted HTML using the
+  <a href='http://qbnz.com/highlighter/'>GeSHi</a> library, and accept
+  the following arguments:
+</p>
+
+<table>
+  <tr>
+    <th>language</th>
+    <th>(required)</th>
+    <td>The source code's language - corresponds directly to name of GeSHi language file</td>
+  </tr>
+  <tr>
+    <th>caption</th>
+    <th>(optional)</th>
+    <td>Caption to display above highlighted code</td>
+  </tr>
+  <tr>
+    <th>start</th>
+    <th>(optional)</th>
+    <td>Number of first line</td>
+  </tr>
+  <tr>
+    <th>highlight</th>
+    <th>(optional)</th>
+    <td>Comma-separated list of line-numbers to highlight</td>
+  </tr>
+</table>
+
+<pre>--- code language: php caption: "How to iterate"
+
+&lt;?php
+foreach ($foo as $k =&gt; $v) {
+  echo $k . &quot; = &quot; . $v . &quot;&lt;br /&gt;&quot;;
+}
+?&gt;</pre>
+
+<p>
+  Before rendering the highlighted text, code blocks will call the global function
+  <code>staticish_configure_geshi</code> if it exists, passing the GeSHi
+  instance as the sole argument. Use this hook to perform
+  any custom configuration of the GeSHi highlighter.
+</p>
+
+<h3>Page-break Blocks</h3>
+
+<p>Page-break blocks have no HTML representation but are useful for truncating content
+  and displaying "read more" links.</p>
+
+<pre>--- pagebreak
+
+</pre>
+
