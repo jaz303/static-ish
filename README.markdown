@@ -66,6 +66,7 @@ And to get your blog on:
     $blog = new Blog($path_to_blog_root);
     $blog->get_page(2, 10); // 2nd page, 10 posts per page
     $blog->get_monthly_archive_counts();
+    $blog->get_monthly_archive(2009, 2); // array of posts for Feb 2009
     $blog->get_post('2009/02/my-first-post'); // load a single post
     $blog->get_feed(10); // RSS feed containing 10 most recent items
     
