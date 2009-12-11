@@ -268,7 +268,7 @@ class Blog
     
     public function get_post($path) {
         
-        if (!preg_match('|^\d{4}/\d{2}/[a-z0-9\._-]+$|', $path)) {
+        if (!preg_match('|^\d{4}/\d{2}/[a-z0-9\._-]+$|i', $path)) {
             $this->not_found();
         }
         
@@ -337,11 +337,11 @@ class Blog
         return $counts;
     }
     
-    public function get_article_count() {
+    public function get_post_count() {
         return array_sum($this->get_monthly_archive_counts());
     }
     
-    public function get_page_count($rpp) {
+    public function get_post_count($rpp) {
         return ceil($this->get_article_count() / $rpp);
     }
     
