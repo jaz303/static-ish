@@ -248,11 +248,13 @@ class PagebreakBlock extends Block
 class Blog
 {
     private $path;
+    private $host;
     private $info               = null;
     private $truncate           = true;
     
-    public function __construct($path) {
+    public function __construct($path, $host = '') {
         $this->path = $path;
+        $this->host = $host;
     }
     
     public function set_truncate($t) {
@@ -398,16 +400,22 @@ class Blog
         $info = $this->get_info();
         
         $doc = new DOMDocument;
-        $root = $doc->createElement('channel');
+        
+        $root = $doc->createElement('rss');
         $root = $doc->appendChild($root);
+        $root->setAttribute('version', '2.0');
         
-        $this->add_text_node($doc, $root, 'title', $info->title);
-        $this->add_text_node($doc, $root, 'description', $info->description);
+        $channel = $doc->createElement('channel');
+        $channel = $root->appendChild($channel);
         
-        if ($info->language)    $this->add_text_node($doc, $root, 'language', $info->language);
-        if ($info->copyright)   $this->add_text_node($doc, $root, 'copyright', $info->copyright);
+        $this->add_text_node($doc, $channel, 'title', $info->title);
+        $this->add_text_node($doc, $channel, 'link', $this->absolute_url());
+        $this->add_text_node($doc, $channel, 'description', $info->description);
         
-        $this->add_text_node($doc, $root, 'generator', 'static-ish');
+        if ($info->language)    $this->add_text_node($doc, $channel, 'language', $info->language);
+        if ($info->copyright)   $this->add_text_node($doc, $channel, 'copyright', $info->copyright);
+        
+        $this->add_text_node($doc, $channel, 'generator', 'static-ish');
         
         foreach ($this->get_page(1, $count) as $post) {
             
@@ -416,10 +424,12 @@ class Blog
             $options = array('truncate' => $this->truncate);
             
             $this->add_text_node($doc, $item, 'title', $post->title);
+            $this->add_text_node($doc, $item, 'link', $this->absolute_url($post));
+            $this->add_text_node($doc, $item, 'guid', $this->absolute_url($post), array('isPermaLink' => 'true'));
             $this->add_text_node($doc, $item, 'pubDate', date('r', $post->published_at));
             $this->add_text_node($doc, $item, 'description', $post->block_html($options));
             
-            $root->appendChild($item);
+            $channel->appendChild($item);
             
         }
         
@@ -427,9 +437,12 @@ class Blog
     
     }
     
-    private function add_text_node($doc, $root, $name, $text) {
+    private function add_text_node($doc, $root, $name, $text, $attribs = array()) {
         $ele = $doc->createElement($name);
         $ele->appendChild($doc->createTextNode($text));
+        foreach ($attribs as $k => $v) {
+            $ele->setAttribute($k, $v);
+        }
         $root->appendChild($ele);
     }
     
@@ -440,8 +453,20 @@ class Blog
         return $this->path . '/' . $path;
     }
     
+    // returns absolute URL for post or blog
+    private function absolute_url($post = null) {
+        if ($post === null) {
+            $info = $this->get_info();
+            return $this->host . $info->base_url;
+        } else {
+            return $this->host . $post->url;
+        }
+    }
+    
+    // returns relative URL for a given post path, e.g. 2009/12/12/foo-bar
     private function relative_url($path) {
-        return $this->get_info()->base_url . '/' . $path;
+        $info = $this->get_info();
+        return rtrim($info->base_url, '/') . '/' . $path;
     }
     
     private function post_path_to_url($path) {
