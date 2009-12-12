@@ -341,8 +341,8 @@ class Blog
         return array_sum($this->get_monthly_archive_counts());
     }
     
-    public function get_post_count($rpp) {
-        return ceil($this->get_article_count() / $rpp);
+    public function get_page_count($rpp) {
+        return ceil($this->get_post_count() / $rpp);
     }
     
     public function get_monthly_archive($year, $month = null) {
