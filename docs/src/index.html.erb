@@ -1,50 +1,111 @@
 
-<h2>This is your first page...</h2>
+<h2>What is static-ish?</h2>
+
+<p>
+  static-ish is a plain text content library for PHP that allows complex
+  documents to be marked up in a series of "blocks", each of which may
+  contain HTML, filtered text, source code, or any other user-defined type.
+  Content, when suitably organised, can also be accessed and queried as a
+  traditional blog.
+</p>
+
+<h2>Motivation</h2>
+
+<p>
+  I was fed up with traditional blog software that a) forced me to use whatever crappy
+  web-based editor it was using and b) prohibited me from editing both my site's code
+  and data on my local machine. On the other hand, most of the offline HTML generators I've
+  come across make it really difficult to support dynamic content, but I like being able
+  to use a bit of PHP whenever it's required. static-ish is the middle-ground, a
+  server-side library for converting human-readable plain-text blog posts into formatted
+  HTML pages. Your content lives alongside your site's code, editable and previewable
+  offline.
+</p>
+
+<h2>Installation</h2>
+
+<p>Copy/move the contents of the <code>lib</code> directory to your PHP <code>include_path</code> and then <code>require 'static-ish/static-ish.php';</code>.</p>
+
+<h2>Right, so what does it look like?</h2>
+
+<p>Pages consist of an optional YAML metadata preamble and a series of blocks delimited
+  by block boundaries. A block boundary has the format:
+  
+<pre>--- block_type arg_1_name: arg_1_value arg_2_name: "arg 2 string value"</pre>
+
+<p>And here's a complete page:</p>
 
 <div class='caption'>Example static-ish document</div>
-<pre>title: Article Title
-published_at: 2009-12-11T14:50
-author: Jason Frame
+<pre>title: My F1rst p0st
+published_at: 2009-12-11T22:23
+tags: ["foo", "bar"]
 
---- html
+--- markdown
 
-&lt;h1&gt;Welcome!&lt;/h1&gt;
+Summary
+-------
 
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-  sed do eiusmod tempor incididunt ut labore et dolore magna
-  aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-  ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  Duis aute irure dolor in reprehenderit in voluptate velit
-  esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-  occaecat cupidatat non proident, sunt in culpa qui officia
-  deserunt mollit anim id est laborum.&lt;/p&gt;
-  
---- code language: javascript caption: "Top Secret Codez"
+Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna
+aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit
+esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia
+deserunt mollit anim id est laborum.
 
-var foo = document.createElement('script');
-foo.type = 'text/javascript';
-foo.src = 'http://example.com/somescript.js';
-foo.onload = function() {
-  getToWork();
-}
-document.body.appendChild(foo);
+--- code language: javascript highlight: 1,2,3
+
+// fibonacci series
+(function(n) {
+  if (n &lt; 2) {
+    return n;
+  } else {
+    return arguments.callee(n - 2) + arguments.callee(n - 1);
+  }
+})(10);
 
 --- pagebreak
 
---- html
+--- markdown
 
-&lt;h2&gt;How it works...&lt;/h2&gt;
+Duis aute irure dolor in reprehenderit in voluptate velit
+esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia
+deserunt mollit anim id est laborum.</pre>
 
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-  sed do eiusmod tempor incididunt ut labore et dolore magna
-  aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-  ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  Duis aute irure dolor in reprehenderit in voluptate velit
-  esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-  occaecat cupidatat non proident, sunt in culpa qui officia
-  deserunt mollit anim id est laborum.&lt;/p&gt; 
-  
-</pre>
+<p>
+  Files adhering to this format can be loaded into objects for easy manipulation and
+  conversion to HTML. Support Textile and Markdown filtering, as well as syntax
+  highlighting, is baked right in. It's also straightforward to add your own block types,
+  such as image galleries and embedded video.
+</p>
 
+<p>
+  Furthermore, if you lay your pages out according to a simple convention, static-ish's
+  <code>Blog</code> class allows you to query the collection as a traditional blog.
+  The necessary directory structure for blog usage is detailed on the
+  <a href='api.html#blog-directory-structure'>API page</a>.
+</p>
 
+<h3>OK, this looks cool. What now?</h3>
 
+<p>
+  For authoring your pages, check out what <a href='block-types.html'>block types</a>
+  are available. When you're ready to start building your app, look over the
+  (simple) <a href='api.html'>API</a> then get cracking.
+</p>
+
+<h3>What? I have to write the app myself?</h3>
+
+<p>Yes. static-ish is just a library, not a blogging package. In the future I may
+  include a small example app but everyone's needs are different, so it's doubtful
+  that static-ish will ever be a general-purpose off-the-shelf blogging system.</p>
+
+<h3>Isn't all this directory/file traversal pretty inefficient?</h3>
+
+<p>
+  Probably. On my own site (i.e. this one) I simply cache all output created by
+  static-ish, then zap the entire cache each time I deploy. This works well
+  enough for me but as usual, YMMV.
+</p>

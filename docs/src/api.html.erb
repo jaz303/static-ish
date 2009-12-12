@@ -8,7 +8,7 @@
   <dd>Loads a page from <code>$path</code>, returning the page object</dd>
   
   <dt>$page->__get($key)</dt>
-  <dd>Returns page metadata item identified by <code>$key</code></dd>
+  <dd>Returns page metadata item (as defined by the YAML preamable) identified by <code>$key</code></dd>
     
   <dt>$page->__set($key, $val)</dt>
   <dd>Sets page metadata item identified by <code>$key</code> to <code>$value</code></dd>
@@ -28,7 +28,7 @@
   blog.
 </p>
 
-<div class='caption'>Example static-ish blog directory structure:</div>
+<div class='caption' id='blog-directory-structure'>Example static-ish blog directory structure:</div>
 <pre>BLOG_ROOT
   |
   |- index.page # Blog metadata contained in YAML preamble

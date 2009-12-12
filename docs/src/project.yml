@@ -1,6 +1,6 @@
 project:
     title: "static-ish"
-    subtitle: "Project Subtitle"
+    subtitle: "plain-text content & blogging engine for PHP"
     jquery_version: "1.2.3"
     main_nav:
         - ["Home", "index.html"]
