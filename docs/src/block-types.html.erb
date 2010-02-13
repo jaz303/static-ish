@@ -92,12 +92,33 @@ foreach ($foo as $k =&gt; $v) {
   any custom configuration of the GeSHi highlighter.
 </p>
 
+<h3>Youtube Blocks</h3>
+
+<p>For embedding videos from Youtube. Supported arguments:</p>
+
+<table>
+  <tr>
+    <th>id</th>
+    <th>(required)</th>
+    <td>Video ID as extracted from the Youtube URL. E.g. for the URL 'http://www.youtube.com/watch?v=A08D4l8pUzE', video ID is 'A08D4l8pUzE'</td>
+  </tr>
+  <tr>
+    <th>size</th>
+    <th>(optional)</th>
+    <td>One of 'small', 'medium', 'large' or 'x-large'</td>
+  </tr>
+  <tr>
+    <th>start</th>
+    <th>(optional)</th>
+    <td>Start time, expressed as minutes/seconds, e.g. '0m30s'</td>
+  </tr>
+</table>
+
+<pre>--- youtube id: A08D4l8pUzE size: small start: 1m30s</pre>
+
 <h3>Page-break Blocks</h3>
 
 <p>Page-break blocks have no HTML representation but are useful for truncating content
   and displaying "read more" links.</p>
 
-<pre>--- pagebreak
-
-</pre>
-
+<pre>--- pagebreak</pre>

@@ -139,7 +139,8 @@ abstract class Block
         'code'          => 'CodeBlock',
         'markdown'      => 'MarkdownBlock',
         'textile'       => 'TextileBlock',
-        'pagebreak'     => 'PagebreakBlock'
+        'pagebreak'     => 'PagebreakBlock',
+        'youtube'       => 'YoutubeBlock'
     );
     
     public static function class_for_block_id($block_id) {
@@ -155,6 +156,10 @@ abstract class Block
     
     public function __get($k) {
         return isset($this->args[$k]) ? $this->args[$k] : null;
+    }
+    
+    public function get_arg($k, $default = null) {
+        return isset($this->args[$k]) ? $this->args[$k] : $default;
     }
     
     public function __construct($content, $args) {
@@ -239,6 +244,48 @@ class PagebreakBlock extends Block
 {
     public function to_html() {
         return '';
+    }
+}
+
+class YoutubeBlock extends Block
+{
+    public static $sizes = array(
+        'small'     => array(320, 265),
+        'medium'    => array(425, 344),
+        'large'     => array(480, 385),
+        'x-large'   => array(640, 505)
+    );
+    
+    public function get_id() { return $this->get_arg('id'); }
+    
+    public function get_size() {
+        $size = $this->get_arg('size', 'medium');
+        return self::$sizes[$size];
+    }
+    
+    public function get_start() {
+        $start = $this->get_arg('start');
+        if (preg_match('/^(\d+)m(\d+)s$/', $start, $matches)) {
+            $start = $matches[1] * 60 + $matches[2];
+        }
+        return (int) $start;
+    }
+    
+    public function to_html() {
+        $id = $this->get_id();
+        $size = $this->get_size();
+        $start = $this->get_start();
+        
+        return "
+          <div class='video video-youtube'>
+            <object width='{$size[0]}' height='{$size[1]}'>
+              <param name='movie' value='http://www.youtube.com/v/{$id}&hl=en_US&fs=1&start={$start}'></param>
+              <param name='allowFullScreen' value='true'></param>
+              <param name='allowscriptaccess' value='always'></param>
+              <embed src='http://www.youtube.com/v/{$id}&hl=en_US&fs=1&start={$start}' type='application/x-shockwave-flash' allowscriptaccess='always' allowfullscreen='true' width='{$size[0]}' height='{$size[1]}'></embed>
+            </object>
+          </div>
+        ";
     }
 }
 
